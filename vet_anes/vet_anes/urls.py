@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from protocol import urls as protocol_urls
 
 urlpatterns = [
-    path('protocol/', include('protocol.urls')),
     path('admin/', admin.site.urls),
+    path('protocol/', include(protocol_urls)),
+
 ]
