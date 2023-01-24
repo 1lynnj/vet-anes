@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-m)y42+om8mo)p+3pevbwh!t-+wxs5ux9pi$wk257b=o)83d1k$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vet-anes.herokuapp.com', '127.0.0.1:8000', '127.0.0.1']
+ALLOWED_HOSTS = ['vet-anes.herokuapp.com', '127.0.0.1:8000', '127.0.0.1', "vet-anes-front.herokuapp.com"]
 
 
 # Application definition
@@ -61,6 +61,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://vet-anes-front.herokuapp.com'
 ]
 
 ROOT_URLCONF = 'vet_anes.urls'
