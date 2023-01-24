@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-m)y42+om8mo)p+3pevbwh!t-+wxs5ux9pi$wk257b=o)83d1k$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vet-anes.herokuapp.com']
+ALLOWED_HOSTS = ['vet-anes.herokuapp.com', '127.0.0.1:8000', '127.0.0.1']
 
 
 # Application definition
@@ -132,3 +132,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+https://ec2-52-21-136-176.compute-1.amazonaws.com
