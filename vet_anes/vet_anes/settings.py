@@ -59,13 +59,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'https://vet-anes-front.herokuapp.com',
-    'https://vet-anes.herokuapp.com', 
-    'http://127.0.0.1:8000', 
-    'http://127.0.0.1'
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+#     'https://vet-anes-front.herokuapp.com',
+#     'https://vet-anes.herokuapp.com', 
+#     'http://127.0.0.1:8000', 
+#     'http://127.0.0.1'
+# ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'vet_anes.urls'
 
