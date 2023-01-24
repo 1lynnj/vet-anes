@@ -133,4 +133,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-https://ec2-52-21-136-176.compute-1.amazonaws.com
