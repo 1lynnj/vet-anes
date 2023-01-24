@@ -8,7 +8,8 @@ function App() {
 
   const loadDrugList = () => {
     axios
-      .get("http://127.0.0.1:8000/protocol/drugs")
+      .get("https://vet-anes.herokuapp.com/protocol/drugs") // deployed
+      // .get("http://127.0.0.1:8000/protocol/drugs")  // local development
       .then((response) => {
         const updatedDrugList = response.data.map((drug) => {
           return {
@@ -20,6 +21,7 @@ function App() {
           };
         });
         setDrugList(updatedDrugList);
+        // console.log(`🌸 ${JSON.stringify(drugList)}`);
       })
       .catch((error) => {
         console.log(error);
