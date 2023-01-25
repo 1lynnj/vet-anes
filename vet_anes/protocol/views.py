@@ -7,10 +7,21 @@ from .serializers import DrugSerializer
 
 # Create your views here.
 from django.http import HttpResponse
-
+from .models import Drug
 
 def index(request):
     return HttpResponse("Hello, world. You're at the protocol index.")
+
+# def drug(request):
+#     if request.method=="POST":
+#         name=request["name"]
+#         concentration=["concentration"]
+#         concentration_units=["concentration_units"]
+#         rxcui_code=["rxcui_code"]
+#         route=["route"]
+#         drug=Drug(name=name, concentration=concentration, concentration_units=concentration_units, rxcui_code=rxcui_code, route=route)
+#         drug.save()
+#     return render(request, "protocol/drugs")
 
 class DrugListApiView(APIView):
     # 1. List all
@@ -102,6 +113,7 @@ class DrugDetailApiView(APIView):
             {"response": "Drug deleted!"},
             status=status.HTTP_200_OK
         )
+
 
 
 
