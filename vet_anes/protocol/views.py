@@ -4,13 +4,52 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Drug
 from .serializers import DrugSerializer
+from rest_framework.decorators import api_view
+from rest_framework import viewsets
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Drug
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the protocol index.")
+
+# def new_protocol(request={
+#     "drug": "Hydromorphone",
+#     "dose": 0.2,
+#     "weight": 30
+# }):
+#     drugs = Drug.objects.all()
+#     # for drug in drugs:
+#     # if request.drug == Drug.name:
+#         # volume = request.weight * request.dose / Drug.concentration
+
+# # def calculate_drug_volume(user_input):
+# #     return weight * dose / concentration
+
+#     return render(request, 'protocol/new_protocol.html', {'drugs':drugs})
+
+@api_view(['GET', 'POST'])
+def new_protocol(request):
+    drugs = Drug.objects.all()
+    if request.method == "POST":
+        data = {
+            "drug": request.data.get('drug'),
+            "dose": request.data.get('dose'),
+            "weight": request.data.get('weight')
+        }
+        dose = float(data["dose"])
+        weight = float(data["weight"])
+
+        response_data = {}
+        for drug in drugs:
+            if drug.name == data["drug"]:
+                volume = weight * dose / drug.concentration
+                response_data = {"volume":volume, "drug": drug.name}
+        return Response(response_data)
+    return Response({"message": "Hello World"})
+
+
+
+# def index(request):
+#     return HttpResponse("Hello, world. You're at the protocol index.")
 
 # def drug(request):
 #     if request.method=="POST":
@@ -117,5 +156,13 @@ class DrugDetailApiView(APIView):
 
 
 
-# def calculate_drug_volume(user_input):
-#     return weight * dose / concentration
+
+
+
+
+# weight = request.data["weight"]
+# drug = request.data["drug"]
+# dose = request.data["dose"]
+
+# for drug in request.data:
+#     drug = Drug(name=request.data["drug"])

@@ -9,7 +9,8 @@ from .views import (
 
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    # path('', views.index, name='index'),
     path('drugs', DrugListApiView.as_view()),
     path('drugs/<int:drug_id>/', DrugDetailApiView.as_view()),
+    path('new_protocol', views.new_protocol),
 ]

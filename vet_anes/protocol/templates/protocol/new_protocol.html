@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <h1>Drugs</h1>
+</header>
+<body>
+{% for drug in drugs %}
+    <article>
+        <p>{{drug.name}} {{drug.concentration}}</p>
+    </article>
+{% endfor %}
+</body>
+</html>
