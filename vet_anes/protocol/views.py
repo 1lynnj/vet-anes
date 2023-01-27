@@ -6,46 +6,62 @@ from .models import Drug
 from .serializers import DrugSerializer
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
+import json
 
 # Create your views here.
 from django.http import HttpResponse
 
-
-# def new_protocol(request={
-#     "drug": "Hydromorphone",
-#     "dose": 0.2,
-#     "weight": 30
-# }):
+# @api_view(['GET', 'POST'])
+# def new_protocol(request):
 #     drugs = Drug.objects.all()
-#     # for drug in drugs:
-#     # if request.drug == Drug.name:
-#         # volume = request.weight * request.dose / Drug.concentration
+#     if request.method == "POST":
+#         data = {
+#             "drug": request.data.get('drug'),
+#             "dose": request.data.get('dose'),
+#             "weight": request.data.get('weight')
+#         }
+#         dose = float(data["dose"])
+#         weight = float(data["weight"])
 
-# # def calculate_drug_volume(user_input):
-# #     return weight * dose / concentration
-
-#     return render(request, 'protocol/new_protocol.html', {'drugs':drugs})
+#         response_data = {}
+#         for drug in drugs:
+#             if drug.name == data["drug"]:
+#                 volume = weight * dose / drug.concentration
+#                 response_data = {"drug": drug.name, "concentration": drug.concentration, "dose": dose, "volume":volume, "route": drug.route}
+#         return Response(response_data)
+#     return Response({"message": "Hello World"})
 
 @api_view(['GET', 'POST'])
 def new_protocol(request):
-    drugs = Drug.objects.all()
-    if request.method == "POST":
-        data = {
-            "drug": request.data.get('drug'),
-            "dose": request.data.get('dose'),
-            "weight": request.data.get('weight')
-        }
-        dose = float(data["dose"])
-        weight = float(data["weight"])
+    drug_list = request.data
+    # print(f"👾{drug_list}")
+    response_data = []
+    for drug_item in drug_list:
+        # print(f"👄{drug_item}")
+        drug = Drug.objects.filter(name=drug_item["drug"]).values()
+        # print(f"💄{drug}")
+        drug_data = drug[0]
+        # print(f"🌸{drug_data}")
+        request_data = {}
+        if request.method == "POST":
+            request_data = {
+                "drug": drug_item["drug"],
+                "dose": drug_item["dose"],
+                "weight": drug_item["weight"]
+            }
+            dose = float(request_data["dose"])
+            weight = float(request_data["weight"])
+        # print(f"🦻{request_data}")
+        else:
+            return ValueError("Invalid Request")
 
-        response_data = {}
-        for drug in drugs:
-            if drug.name == data["drug"]:
-                volume = weight * dose / drug.concentration
-                response_data = {"volume":volume, "drug": drug.name}
-        return Response(response_data)
-    return Response({"message": "Hello World"})
 
+        if drug_data["name"] == request_data["drug"]:
+            volume = weight * dose / drug_data["concentration"]
+            response_data.append({"drug": drug_data["name"], "concentration": drug_data["concentration"], "dose": dose, "volume":volume, "route": drug_data["route"]})
+    print(f"👍🏻{response_data}")
+    return Response(response_data)
+    # return Response({"message": "Hello World"})
 
 
 # def index(request):
