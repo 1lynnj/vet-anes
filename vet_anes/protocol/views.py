@@ -38,14 +38,14 @@ def new_protocol(request):
     response_data = []
     for drug_item in drug_list:
         # print(f"👄{drug_item}")
-        drug = Drug.objects.filter(name=drug_item["drug"]).values()
+        drug = Drug.objects.filter(id=drug_item["drugId"]).values()
         # print(f"💄{drug}")
         drug_data = drug[0]
         # print(f"🌸{drug_data}")
         request_data = {}
         if request.method == "POST":
             request_data = {
-                "drug": drug_item["drug"],
+                "drugId": drug_item["drugId"],
                 "dose": drug_item["dose"],
                 "weight": drug_item["weight"]
             }
@@ -56,7 +56,7 @@ def new_protocol(request):
             return ValueError("Invalid Request")
 
 
-        if drug_data["name"] == request_data["drug"]:
+        if drug_data["id"] == request_data["drugId"]:
             volume = weight * dose / drug_data["concentration"]
             response_data.append({"drug": drug_data["name"], "concentration": drug_data["concentration"], "dose": dose, "volume":volume, "route": drug_data["route"]})
     print(f"👍🏻{response_data}")
