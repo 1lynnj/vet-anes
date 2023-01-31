@@ -13,4 +13,5 @@ urlpatterns = [
     path('drugs', DrugListApiView.as_view()),
     path('drugs/<int:drug_id>/', DrugDetailApiView.as_view()),
     path('new_protocol', views.new_protocol),
+    path('er_drugs', views.er_drugs),
 ]

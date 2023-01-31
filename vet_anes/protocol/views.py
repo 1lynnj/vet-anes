@@ -65,19 +65,45 @@ def new_protocol(request):
     # return Response({"message": "Hello World"})
 
 
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the protocol index.")
+@api_view(['POST'])
+def er_drugs(request):
+    # print(f"🥰{request.data}")
+    # print(f"🥰{request.data['weight']}")
+    weight = request.data['weight']
+    response_data = []
+    er_drugs = [
+        "Atropine 0.54mg/ml",
+        "Glycopyrrolate 0.2mg/ml",
+        "Dopram 20mg/ml",
+        "Epinephrine 1mg/ml (low dose)",
+        "Epinephrine 1mg/ml (high dose)",
+        "Lidocaine 20mg/ml - Dogs",
+        "Furosemide 50mg/ml",
+        "Dexamethasone SP 4mg/ml",
+        "Flumazenil 0.1mg/ml",
+        "Naloxone 0.4mg/ml"
+    ]
+    for er_drug in er_drugs:
+        drug = Drug.objects.filter(name=er_drug).values()
+        print(f"💄{drug}")
+        drug_data = drug[0]
+        # print(f"🌸{drug_data}")
+        # request_body = {}
+        if request.method == "POST":
+            request.body = {
+                "weight": request.data['weight']
+            }
+        # else:
+        #     return ValueError("Invalid Request")
+        # weight = int(request_body["weight"])
+        dose = drug_data["er_dose"]
+        concentration = drug_data["concentration"]
+        volume = round(weight * dose / concentration, 1)
 
-# def drug(request):
-#     if request.method=="POST":
-#         name=request["name"]
-#         concentration=["concentration"]
-#         concentration_units=["concentration_units"]
-#         rxcui_code=["rxcui_code"]
-#         route=["route"]
-#         drug=Drug(name=name, concentration=concentration, concentration_units=concentration_units, rxcui_code=rxcui_code, route=route)
-#         drug.save()
-#     return render(request, "protocol/drugs")
+        response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": concentration, "dose": dose, "volume":volume, "route": drug_data["route"]})
+    print(f"👍🏻{response_data}")
+    return Response(response_data)
+
 
 class DrugListApiView(APIView):
     # 1. List all
