@@ -33,8 +33,9 @@ from django.http import HttpResponse
 
 @api_view(['GET', 'POST'])
 def new_protocol(request):
+    print(f"🥰{request}")
     drug_list = request.data
-    # print(f"👾{drug_list}")
+    print(f"👾{drug_list}")
     response_data = []
     for drug_item in drug_list:
         # print(f"👄{drug_item}")
@@ -42,23 +43,23 @@ def new_protocol(request):
         # print(f"💄{drug}")
         drug_data = drug[0]
         # print(f"🌸{drug_data}")
-        request_data = {}
+        request_body = {}
         if request.method == "POST":
-            request_data = {
+            request_body = {
                 "drugId": drug_item["drugId"],
                 "dose": drug_item["dose"],
                 "weight": drug_item["weight"]
             }
-            dose = float(request_data["dose"])
-            weight = float(request_data["weight"])
+            dose = float(request_body["dose"])
+            weight = float(request_body["weight"])
         # print(f"🦻{request_data}")
         else:
             return ValueError("Invalid Request")
 
 
-        if drug_data["id"] == request_data["drugId"]:
+        if drug_data["id"] == request_body["drugId"]:
             volume = weight * dose / drug_data["concentration"]
-            response_data.append({"drug": drug_data["name"], "concentration": drug_data["concentration"], "dose": dose, "volume":volume, "route": drug_data["route"]})
+            response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], "dose": dose, "volume":volume, "route": drug_data["route"]})
     print(f"👍🏻{response_data}")
     return Response(response_data)
     # return Response({"message": "Hello World"})
