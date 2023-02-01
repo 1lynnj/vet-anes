@@ -55,7 +55,6 @@ def er_drugs(request):
     ]
     for er_drug in er_drugs:
         drug = Drug.objects.filter(name=er_drug).values()
-        print(f"💄{drug}")
         drug_data = drug[0]
         if request.method == "POST":
             request.body = {
