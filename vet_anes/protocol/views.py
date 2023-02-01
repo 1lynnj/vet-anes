@@ -11,38 +11,13 @@ import json
 # Create your views here.
 from django.http import HttpResponse
 
-# @api_view(['GET', 'POST'])
-# def new_protocol(request):
-#     drugs = Drug.objects.all()
-#     if request.method == "POST":
-#         data = {
-#             "drug": request.data.get('drug'),
-#             "dose": request.data.get('dose'),
-#             "weight": request.data.get('weight')
-#         }
-#         dose = float(data["dose"])
-#         weight = float(data["weight"])
-
-#         response_data = {}
-#         for drug in drugs:
-#             if drug.name == data["drug"]:
-#                 volume = weight * dose / drug.concentration
-#                 response_data = {"drug": drug.name, "concentration": drug.concentration, "dose": dose, "volume":volume, "route": drug.route}
-#         return Response(response_data)
-#     return Response({"message": "Hello World"})
-
 @api_view(['GET', 'POST'])
 def new_protocol(request):
-    print(f"🥰{request}")
     drug_list = request.data
-    print(f"👾{drug_list}")
     response_data = []
     for drug_item in drug_list:
-        # print(f"👄{drug_item}")
         drug = Drug.objects.filter(id=drug_item["drugId"]).values()
-        # print(f"💄{drug}")
         drug_data = drug[0]
-        # print(f"🌸{drug_data}")
         request_body = {}
         if request.method == "POST":
             request_body = {
@@ -52,7 +27,6 @@ def new_protocol(request):
             }
             dose = float(request_body["dose"])
             weight = float(request_body["weight"])
-        # print(f"🦻{request_data}")
         else:
             return ValueError("Invalid Request")
 
@@ -60,15 +34,11 @@ def new_protocol(request):
         if drug_data["id"] == request_body["drugId"]:
             volume = weight * dose / drug_data["concentration"]
             response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], "dose": dose, "volume":volume, "route": drug_data["route"]})
-    print(f"👍🏻{response_data}")
     return Response(response_data)
-    # return Response({"message": "Hello World"})
 
 
 @api_view(['POST'])
 def er_drugs(request):
-    # print(f"🥰{request.data}")
-    # print(f"🥰{request.data['weight']}")
     weight = int(request.data['weight'])
     response_data = []
     er_drugs = [
@@ -87,21 +57,15 @@ def er_drugs(request):
         drug = Drug.objects.filter(name=er_drug).values()
         print(f"💄{drug}")
         drug_data = drug[0]
-        # print(f"🌸{drug_data}")
-        # request_body = {}
         if request.method == "POST":
             request.body = {
                 "weight": request.data['weight']
             }
-        # else:
-        #     return ValueError("Invalid Request")
-        # weight = int(request_body["weight"])
         dose = drug_data["er_dose"]
         concentration = drug_data["concentration"]
         volume = round(weight * dose / concentration, 1)
 
         response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": concentration, "dose": dose, "volume":volume, "route": drug_data["route"]})
-    print(f"👍🏻{response_data}")
     return Response(response_data)
 
 
@@ -197,15 +161,3 @@ class DrugDetailApiView(APIView):
         )
 
 
-
-
-
-
-
-
-# weight = request.data["weight"]
-# drug = request.data["drug"]
-# dose = request.data["dose"]
-
-# for drug in request.data:
-#     drug = Drug(name=request.data["drug"])
