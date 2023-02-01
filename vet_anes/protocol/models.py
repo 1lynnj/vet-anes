@@ -14,5 +14,14 @@ class Drug(BaseModel):
         return self.name
     
 
+class Fluid(BaseModel):
+    rate_name = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
+    cat_rate_calculation = models.IntegerField()
+    dog_rate_calculation = models.IntegerField()
+    fluid_rate_increment = models.CharField(max_length=50, default='')
+    administration_note = models.CharField(max_length=50, default='')
 
+    def __str__(self):
+        return self.rate_name
 

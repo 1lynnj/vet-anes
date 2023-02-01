@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Drug
+from .models import Fluid
 from .serializers import DrugSerializer
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
@@ -10,6 +11,36 @@ import json
 
 # Create your views here.
 from django.http import HttpResponse
+
+@api_view(['POST'])
+def fluid_rates(request):
+    print(f"request{request.data}")
+    # request to include weight, species, fluidId
+    print(f"request data: {request.data}")
+    response_data = []
+    fluid_list = ['Maintenance', 'Surgery', 'Bolus', 'Hetastarch', 'Shock']
+    # print(f"==========>{fluids}")
+    for fluid_item in fluid_list:
+        fluid = Fluid.objects.filter(rate_name=fluid_item).values()
+        fluid_data = fluid[0]
+        print(f"========*********>{fluid_data}")
+        request_body = {}
+        if request.method == "POST":
+            request_body = {
+                "species": request.data["species"],
+                "weight": request.data["weight"]
+            }
+            
+        weight = float(request_body["weight"])
+
+        if request_body['species'] == "cat":
+            rate_calculation = fluid_data['cat_rate_calculation']
+        else:
+            rate_calculation = fluid_data['dog_rate_calculation']
+
+        rate = weight * rate_calculation
+        response_data.append({"id": fluid_data["id"], "rate_name": fluid_data["rate_name"], "type": fluid_data["type"], "fluid_rate": rate, "fluid_rate_increment": fluid_data["fluid_rate_increment"], "administration_note":fluid_data["administration_note"]})
+    return Response(response_data)
 
 @api_view(['GET', 'POST'])
 def new_protocol(request):
@@ -37,7 +68,7 @@ def new_protocol(request):
     return Response(response_data)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 def er_drugs(request):
     weight = int(request.data['weight'])
     response_data = []
