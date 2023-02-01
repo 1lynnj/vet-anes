@@ -69,7 +69,7 @@ def new_protocol(request):
 def er_drugs(request):
     # print(f"🥰{request.data}")
     # print(f"🥰{request.data['weight']}")
-    weight = request.data['weight']
+    weight = int(request.data['weight'])
     response_data = []
     er_drugs = [
         "Atropine 0.54mg/ml",
