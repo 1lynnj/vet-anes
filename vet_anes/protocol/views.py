@@ -15,6 +15,28 @@ import json
 from django.http import HttpResponse
 
 @api_view(['POST'])
+def fentanyl_cri(request):
+    print(f"request{request.data}")
+    # request to include weight
+    print(f"request data: {request.data}")
+    response_data = []
+    request_body = {}
+    fentanyl = Drug.objects.filter(name="Fentanyl 50mcg/ml").values()
+    fentanyl_data = fentanyl[0]
+    if request.method == "POST":
+        request_body = {
+            "weight": request.data["weight"]
+        }
+        
+    weight = float(request_body["weight"])
+    rate = 0
+    for dose in range(5):
+        rate = weight * (dose + 1) / fentanyl_data["concentration"]
+        response_data.append({dose + 1: rate})
+    print(f"🩳{response_data}")
+    return Response(response_data)
+
+@api_view(['POST'])
 def fluid_rates(request):
     print(f"request{request.data}")
     # request to include weight, species, fluidId
