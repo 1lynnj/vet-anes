@@ -20,10 +20,11 @@ def fluid_rates(request):
     # request to include weight, species, fluidId
     print(f"request data: {request.data}")
     response_data = []
-    fluid_list = ['Maintenance', 'Surgery', 'Bolus', 'Hetastarch', 'Shock']
+    fluid_list = ['Maintenance rate', 'Surgery rate', 'Bolus', 'Hetastarch', 'Shock rate']
     # print(f"==========>{fluids}")
     for fluid_item in fluid_list:
         fluid = Fluid.objects.filter(rate_name=fluid_item).values()
+        print(f"🌼{fluid}")
         fluid_data = fluid[0]
         print(f"========*********>{fluid_data}")
         request_body = {}

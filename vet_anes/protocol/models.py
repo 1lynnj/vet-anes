@@ -19,8 +19,8 @@ class Fluid(BaseModel):
     type = models.CharField(max_length=50)
     cat_rate_calculation = models.IntegerField()
     dog_rate_calculation = models.IntegerField()
-    fluid_rate_increment = models.CharField(max_length=50, default='')
-    administration_note = models.CharField(max_length=50, default='')
+    fluid_rate_increment = models.CharField(max_length=50, default='', blank=True)
+    administration_note = models.CharField(max_length=50, default='', blank=True)
 
     def __str__(self):
         return self.rate_name
