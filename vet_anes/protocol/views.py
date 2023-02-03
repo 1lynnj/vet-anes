@@ -32,7 +32,7 @@ def fentanyl_cri(request):
     rate = 0
     for dose in range(5):
         rate = weight * (dose + 1) / fentanyl_data["concentration"]
-        response_data.append({dose + 1: rate})
+        response_data.append({"dose": dose + 1, "rate": rate})
     print(f"🩳{response_data}")
     return Response(response_data)
 
@@ -65,6 +65,7 @@ def fluid_rates(request):
 
         rate = weight * rate_calculation
         response_data.append({"id": fluid_data["id"], "rate_name": fluid_data["rate_name"], "type": fluid_data["type"], "fluid_rate": rate, "fluid_rate_increment": fluid_data["fluid_rate_increment"], "administration_note":fluid_data["administration_note"]})
+    print(f"=========>/>/>>>>{response_data}")
     return Response(response_data)
 
 @api_view(['GET', 'POST'])
