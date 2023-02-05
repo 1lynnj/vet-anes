@@ -16,9 +16,9 @@ from django.http import HttpResponse
 
 @api_view(['POST'])
 def fentanyl_cri(request):
-    print(f"request{request.data}")
+    # print(f"request{request.data}")
     # request to include weight
-    print(f"request data: {request.data}")
+    # print(f"request data: {request.data}")
     response_data = []
     request_body = {}
     fentanyl = Drug.objects.filter(name="Fentanyl 50mcg/ml").values()
@@ -33,22 +33,22 @@ def fentanyl_cri(request):
     for dose in range(5):
         rate = weight * (dose + 1) / fentanyl_data["concentration"]
         response_data.append({"dose": dose + 1, "rate": rate})
-    print(f"🩳{response_data}")
+    # print(f"🩳{response_data}")
     return Response(response_data)
 
 @api_view(['POST'])
 def fluid_rates(request):
-    print(f"request{request.data}")
+    # print(f"request{request.data}")
     # request to include weight, species, fluidId
-    print(f"request data: {request.data}")
+    # print(f"request data: {request.data}")
     response_data = []
     fluid_list = ['Maintenance rate', 'Surgery rate', 'Bolus', 'Hetastarch', 'Shock rate']
     # print(f"==========>{fluids}")
     for fluid_item in fluid_list:
         fluid = Fluid.objects.filter(rate_name=fluid_item).values()
-        print(f"🌼{fluid}")
+        # print(f"🌼{fluid}")
         fluid_data = fluid[0]
-        print(f"========*********>{fluid_data}")
+        # print(f"========*********>{fluid_data}")
         request_body = {}
         if request.method == "POST":
             request_body = {
@@ -65,27 +65,30 @@ def fluid_rates(request):
 
         rate = weight * rate_calculation
         response_data.append({"id": fluid_data["id"], "rate_name": fluid_data["rate_name"], "type": fluid_data["type"], "fluid_rate": rate, "fluid_rate_increment": fluid_data["fluid_rate_increment"], "administration_note":fluid_data["administration_note"]})
-    print(f"=========>/>/>>>>{response_data}")
+    # print(f"=========>/>/>>>>{response_data}")
     return Response(response_data)
 
 @api_view(['GET', 'POST'])
 def new_protocol(request):
     drug_list = request.data
+    print(f"drug_list: {drug_list}")
     response_data = []
     for drug_item in drug_list:
         drug = Drug.objects.filter(id=drug_item["drugId"]).values()
-        drug_data = drug[0]
-        request_body = {}
-        if request.method == "POST":
-            request_body = {
-                "drugId": drug_item["drugId"],
-                "dose": drug_item["dose"],
-                "weight": drug_item["weight"]
-            }
-            dose = float(request_body["dose"])
-            weight = float(request_body["weight"])
-        else:
-            return ValueError("Invalid Request")
+        print(f"drug: {drug}")
+        if len(drug) > 0:
+            drug_data = drug[0]
+            request_body = {}
+            if request.method == "POST":
+                request_body = {
+                    "drugId": drug_item["drugId"],
+                    "dose": drug_item["dose"],
+                    "weight": drug_item["weight"]
+                }
+                dose = float(request_body["dose"])
+                weight = float(request_body["weight"])
+            else:
+                return ValueError("Invalid Request")
 
 
         if drug_data["id"] == request_body["drugId"]:
