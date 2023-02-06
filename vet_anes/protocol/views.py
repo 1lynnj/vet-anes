@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,19 +5,10 @@ from .models import Drug
 from .models import Fluid
 from .serializers import DrugSerializer
 from rest_framework.decorators import api_view
-from rest_framework import viewsets
-import json
-
-# Troubleshooting deployment hangup
-
-# Create your views here.
 from django.http import HttpResponse
 
 @api_view(['POST'])
 def fentanyl_cri(request):
-    # print(f"request{request.data}")
-    # request to include weight
-    # print(f"request data: {request.data}")
     response_data = []
     request_body = {}
     fentanyl = Drug.objects.filter(name="Fentanyl 50mcg/ml").values()
@@ -27,28 +17,22 @@ def fentanyl_cri(request):
         request_body = {
             "weight": request.data["weight"]
         }
-        
     weight = float(request_body["weight"])
     rate = 0
     for dose in range(5):
-        rate = weight * (dose + 1) / fentanyl_data["concentration"]
+        rate = round(weight * (dose + 1) / fentanyl_data["concentration"], 2)
         response_data.append({"dose": dose + 1, "rate": rate})
-    # print(f"🩳{response_data}")
     return Response(response_data)
 
+
+#TO DO: Refactor to get fluid list from model instead of hard coded
 @api_view(['POST'])
 def fluid_rates(request):
-    # print(f"request{request.data}")
-    # request to include weight, species, fluidId
-    # print(f"request data: {request.data}")
     response_data = []
     fluid_list = ['Maintenance rate', 'Surgery rate', 'Bolus', 'Hetastarch', 'Shock rate']
-    # print(f"==========>{fluids}")
     for fluid_item in fluid_list:
         fluid = Fluid.objects.filter(rate_name=fluid_item).values()
-        # print(f"🌼{fluid}")
         fluid_data = fluid[0]
-        # print(f"========*********>{fluid_data}")
         request_body = {}
         if request.method == "POST":
             request_body = {
@@ -57,25 +41,25 @@ def fluid_rates(request):
             }
             
         weight = float(request_body["weight"])
+        species = request_body['species'].lower()
 
-        if request_body['species'] == "cat":
+        if species == "cat":
             rate_calculation = fluid_data['cat_rate_calculation']
         else:
             rate_calculation = fluid_data['dog_rate_calculation']
 
         rate = weight * rate_calculation
-        response_data.append({"id": fluid_data["id"], "rate_name": fluid_data["rate_name"], "type": fluid_data["type"], "fluid_rate": rate, "fluid_rate_increment": fluid_data["fluid_rate_increment"], "administration_note":fluid_data["administration_note"]})
-    # print(f"=========>/>/>>>>{response_data}")
+        response_data.append({"id": fluid_data["id"], "rate_name": fluid_data["rate_name"], 
+        "type": fluid_data["type"], "fluid_rate": rate, "fluid_rate_increment": fluid_data["fluid_rate_increment"], 
+        "administration_note":fluid_data["administration_note"]})
     return Response(response_data)
 
 @api_view(['GET', 'POST'])
 def new_protocol(request):
     drug_list = request.data
-    print(f"drug_list: {drug_list}")
     response_data = []
     for drug_item in drug_list:
         drug = Drug.objects.filter(id=drug_item["drugId"]).values()
-        print(f"drug: {drug}")
         if len(drug) > 0:
             drug_data = drug[0]
             request_body = {}
@@ -92,14 +76,16 @@ def new_protocol(request):
 
 
         if drug_data["id"] == request_body["drugId"]:
-            volume = weight * dose / drug_data["concentration"]
-            response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], "dose": dose, "volume":volume, "route": drug_data["route"]})
+            volume = round(weight * dose / drug_data["concentration"], 2)
+            response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], 
+            "dose": dose, "volume":volume, "route": drug_data["route"]})
     return Response(response_data)
 
 
+# TO DO: Refactor - Add type attribute to drug model then get er_drugs list from db query 
+# from that attribute instead of hard coded
 @api_view(['POST', 'GET'])
 def er_drugs(request):
-    weight = int(request.data['weight'])
     response_data = []
     er_drugs = [
         "Atropine 0.54mg/ml",
@@ -117,12 +103,13 @@ def er_drugs(request):
         drug = Drug.objects.filter(name=er_drug).values()
         drug_data = drug[0]
         if request.method == "POST":
-            request.body = {
+            request_body = {
                 "weight": request.data['weight']
             }
+        weight = float(request_body['weight'])
         dose = drug_data["er_dose"]
         concentration = drug_data["concentration"]
-        volume = round(weight * dose / concentration, 1)
+        volume = round(weight * dose / concentration, 2)
 
         response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": concentration, "dose": dose, "volume":volume, "route": drug_data["route"]})
     return Response(response_data)
