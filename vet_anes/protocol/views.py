@@ -48,7 +48,7 @@ def fluid_rates(request):
         else:
             rate_calculation = fluid_data['dog_rate_calculation']
 
-        rate = weight * rate_calculation
+        rate = round(weight * rate_calculation)
         response_data.append({"id": fluid_data["id"], "rate_name": fluid_data["rate_name"], 
         "type": fluid_data["type"], "fluid_rate": rate, "fluid_rate_increment": fluid_data["fluid_rate_increment"], 
         "administration_note":fluid_data["administration_note"]})
