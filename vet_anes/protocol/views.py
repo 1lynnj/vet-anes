@@ -59,26 +59,29 @@ def new_protocol(request):
     drug_list = request.data
     response_data = []
     for drug_item in drug_list:
-        drug = Drug.objects.filter(id=drug_item["drugId"]).values()
-        if len(drug) > 0:
-            drug_data = drug[0]
-            request_body = {}
-            if request.method == "POST":
-                request_body = {
-                    "drugId": drug_item["drugId"],
-                    "dose": drug_item["dose"],
-                    "weight": drug_item["weight"]
-                }
-                dose = float(request_body["dose"])
-                weight = float(request_body["weight"])
-            else:
-                return ValueError("Invalid Request")
+        if not drug_item["dose"]:
+            continue
+        else:
+            drug = Drug.objects.filter(id=drug_item["drugId"]).values()
+            if len(drug) > 0:
+                drug_data = drug[0]
+                request_body = {}
+                if request.method == "POST":
+                    request_body = {
+                        "drugId": drug_item["drugId"],
+                        "dose": drug_item["dose"],
+                        "weight": drug_item["weight"]
+                    }
+                    dose = float(request_body["dose"])
+                    weight = float(request_body["weight"])
+                else:
+                    return ValueError("Invalid Request")
 
 
-        if drug_data["id"] == request_body["drugId"]:
-            volume = round(weight * dose / drug_data["concentration"], 2)
-            response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], 
-            "dose": dose, "volume":volume, "route": drug_data["route"]})
+            if drug_data["id"] == request_body["drugId"]:
+                volume = round(weight * dose / drug_data["concentration"], 2)
+                response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], 
+                "dose": dose, "volume":volume, "route": drug_data["route"]})
     return Response(response_data)
 
 
