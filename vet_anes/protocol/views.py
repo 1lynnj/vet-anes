@@ -7,8 +7,12 @@ from .serializers import DrugSerializer
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
 
+
+
+#TO DO: update drug model with method to calculate fent cri
 @api_view(['POST'])
 def fentanyl_cri(request):
+    '''Calculate fentanyl CRI using patient weight'''
     response_data = []
     request_body = {}
     fentanyl = Drug.objects.filter(name="Fentanyl 50mcg/ml").values()
@@ -25,9 +29,11 @@ def fentanyl_cri(request):
     return Response(response_data)
 
 
-#TO DO: Refactor to get fluid list from model instead of hard coded
+#TO DO: Refactor create fluid model and get fluid list from model instead of hard coded
+#TO DO: create method to calcuate fluid rates
 @api_view(['POST'])
 def fluid_rates(request):
+    '''Calculate fluid rates using patient weight'''
     response_data = []
     fluid_list = ['Maintenance rate', 'Surgery rate', 'Bolus', 'Hetastarch', 'Shock rate']
     for fluid_item in fluid_list:
@@ -54,8 +60,11 @@ def fluid_rates(request):
         "administration_note":fluid_data["administration_note"]})
     return Response(response_data)
 
+
+#TO DO: update drug model to create method to calculate volumes
 @api_view(['GET', 'POST'])
 def new_protocol(request):
+    '''Calculate drug volumes from requested drugs and doses from user input using patient weight'''
     drug_list = request.data
     response_data = []
     for drug_item in drug_list:
@@ -87,8 +96,10 @@ def new_protocol(request):
 
 # TO DO: Refactor - Add type attribute to drug model then get er_drugs list from db query 
 # from that attribute instead of hard coded
+# TO DO: create method to do calculations of er drugs
 @api_view(['POST', 'GET'])
 def er_drugs(request):
+    '''Calculate ER drugs using patient weight'''
     response_data = []
     er_drugs = [
         "Atropine 0.54mg/ml",
@@ -117,7 +128,7 @@ def er_drugs(request):
         response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": concentration, "dose": dose, "volume":volume, "route": drug_data["route"]})
     return Response(response_data)
 
-
+# Admin views available on django admin panel
 class DrugListApiView(APIView):
     # 1. List all
     def get(self, request, *args, **kwargs):
