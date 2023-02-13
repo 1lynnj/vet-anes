@@ -46,7 +46,7 @@ alter database <databasename>_development owner to <username>;
 - Psycopg2pi
 - DJ Database URL
 - Whitenoise
-- 
+  
 ```
 pip install django djangorestframework django-cors-headers python-dotenv psycopg2 dj-database-url whitenoise
 ```
@@ -60,6 +60,7 @@ python manage.py startapp <app_name>
 ```
 
 **Database setup**
+
 On same level as manage.py, creates a .env file and paste the following into it.
 ```
 DATABASE_URL=‘postgres://postgres:postgres@127.0.0.1:5432/<database_name>’
@@ -80,35 +81,23 @@ DATABASES = {
 
 **Add CORS**
 1. Install library
-```
-pip install django-cors-headers
-```
+`pip install django-cors-headers`
 
 2. Add in proper place in your INSTALLED_APPS in settings.py - after the rest_framework and before your application myapp
-   ```
+```
 'rest_framework',
 'corsheaders',
 'myapp.apps.MyAppConfig',
-   ```
+```
 
 3. Allow the origins for your api (inside settings.py)
-```
-CORS_ORIGIN_WHITELIST = (
-'http://localhost:3000',  # for localhost (REACT Default)
-)
-```
+`CORS_ORIGIN_WHITELIST = ('http://localhost:3000',  # for localhost (REACT Default))`
 
 4. In settings.py, update MIDDLEWARE at top of the list
-```
-'corsheaders.middleware.CorsMiddleware',
-```
+`'corsheaders.middleware.CorsMiddleware',`
 
 5. In settings.py, confirm 
-```
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
-```
+`CORS_ALLOWED_ORIGINS = ['http://localhost:3000',]`
 
 ## Frontend
 
