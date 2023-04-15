@@ -8,8 +8,6 @@ from rest_framework.decorators import api_view
 from django.http import HttpResponse
 
 
-
-#TO DO: update drug model with method to calculate fent cri
 @api_view(['POST'])
 def fentanyl_cri(request):
     '''Calculate fentanyl CRI using patient weight'''
@@ -29,8 +27,7 @@ def fentanyl_cri(request):
     return Response(response_data)
 
 
-#TO DO: Refactor create fluid model and get fluid list from model instead of hard coded
-#TO DO: create method to calcuate fluid rates
+#TODO: Refactor create fluid model and get fluid list from model instead of hard coded
 @api_view(['POST'])
 def fluid_rates(request):
     '''Calculate fluid rates using patient weight'''
@@ -61,7 +58,6 @@ def fluid_rates(request):
     return Response(response_data)
 
 
-#TO DO: update drug model to create method to calculate volumes
 @api_view(['GET', 'POST'])
 def new_protocol(request):
     '''Calculate drug volumes from requested drugs and doses from user input using patient weight'''
@@ -79,7 +75,8 @@ def new_protocol(request):
                     request_body = {
                         "drugId": drug_item["drugId"],
                         "dose": drug_item["dose"],
-                        "weight": drug_item["weight"]
+                        "weight": drug_item["weight"],
+                        "species": drug_item["species"]
                     }
                     dose = float(request_body["dose"])
                     weight = float(request_body["weight"])
@@ -88,15 +85,20 @@ def new_protocol(request):
 
 
             if drug_data["id"] == request_body["drugId"]:
+                if request_body["species"] == "Cat" and (request_body["dose"] > drug_data["cat_high_dose"] or request_body["dose"] < drug_data["cat_low_dose"]):
+                    dose_warning = "That dose is outside of recommended dosing guidelines."
+                elif request_body["species"] == "Dog" and (request_body["dose"] > drug_data["dog_high_dose"] or request_body["dose"] < drug_data["dog_low_dose"]):
+                    dose_warning = "That dose is outside of recommended dosing guidelines."
+                else:
+                    dose_warning = None
                 volume = round(weight * dose / drug_data["concentration"], 2)
                 response_data.append({"id": drug_data["id"], "drug": drug_data["name"], "concentration": drug_data["concentration"], 
-                "dose": dose, "volume":volume, "route": drug_data["route"]})
+                "dose": dose, "volume":volume, "route": drug_data["route"], "dose_warning": dose_warning})
     return Response(response_data)
 
 
-# TO DO: Refactor - Add type attribute to drug model then get er_drugs list from db query 
+# TODO: Refactor - Add type attribute to drug model then get er_drugs list from db query 
 # from that attribute instead of hard coded
-# TO DO: create method to do calculations of er drugs
 @api_view(['POST', 'GET'])
 def er_drugs(request):
     '''Calculate ER drugs using patient weight'''
@@ -113,6 +115,7 @@ def er_drugs(request):
         "Flumazenil 0.1mg/ml",
         "Naloxone 0.4mg/ml"
     ]
+    # TODO: Do I need to add species here - check ER drug dosing info
     for er_drug in er_drugs:
         drug = Drug.objects.filter(name=er_drug).values()
         drug_data = drug[0]
