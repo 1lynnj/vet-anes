@@ -72,6 +72,7 @@ def new_protocol(request):
                 drug_data = drug[0]
                 request_body = {}
                 if request.method == "POST":
+                    print(f"{drug_item=}")
                     request_body = {
                         "drugId": drug_item["drugId"],
                         "dose": drug_item["dose"],
