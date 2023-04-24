@@ -116,7 +116,7 @@ def er_drugs(request):
         "Flumazenil 0.1mg/ml",
         "Naloxone 0.4mg/ml"
     ]
-    # TODO: Do I need to add species here - check ER drug dosing info
+    # TODO: Do I need to add species here - check ER drug dosing info -
     for er_drug in er_drugs:
         drug = Drug.objects.filter(name=er_drug).values()
         drug_data = drug[0]
