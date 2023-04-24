@@ -86,9 +86,9 @@ def new_protocol(request):
 
 
             if drug_data["id"] == request_body["drugId"]:
-                if request_body["species"] == "Cat" and (request_body["dose"] > drug_data["cat_high_dose"] or request_body["dose"] < drug_data["cat_low_dose"]):
+                if request_body["species"] == "Cat" and (dose > drug_data["cat_high_dose"] or dose < drug_data["cat_low_dose"]):
                     dose_warning = "That dose is outside of recommended dosing guidelines."
-                elif request_body["species"] == "Dog" and (request_body["dose"] > drug_data["dog_high_dose"] or request_body["dose"] < drug_data["dog_low_dose"]):
+                elif request_body["species"] == "Dog" and (dose > drug_data["dog_high_dose"] or dose < drug_data["dog_low_dose"]):
                     dose_warning = "That dose is outside of recommended dosing guidelines."
                 else:
                     dose_warning = None
