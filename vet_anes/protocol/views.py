@@ -27,7 +27,7 @@ def fentanyl_cri(request):
     return Response(response_data)
 
 
-#TODO: Refactor create fluid model and get fluid list from model instead of hard coded
+#TODO: Refactor create fluid model and get fluid list from model instead of hard coded.
 @api_view(['POST'])
 def fluid_rates(request):
     '''Calculate fluid rates using patient weight'''
