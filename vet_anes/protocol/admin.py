@@ -5,7 +5,7 @@ from . import models
 
 # returns table of drugs with all attributes
 class DrugAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'concentration', 'concentration_units', 'rxcui_code', 'route', 'er_dose')
+    list_display = ('id', 'name', 'concentration', 'concentration_units', 'rxcui_code', 'route', 'er_dose', 'cat_low_dose', 'cat_high_dose', 'dog_low_dose', 'dog_high_dose')
     
 admin.site.register(models.Drug, DrugAdmin)
 

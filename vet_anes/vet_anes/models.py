@@ -5,4 +5,4 @@ class BaseModel(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True
+        abstract = True  # does not create a table for above model, instead adds columns to child classes
