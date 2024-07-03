@@ -6,13 +6,10 @@ Popular tools currently in use:
 - blank forms where medical staff manually write in and calculate drug dosages using a calculator
 - excel spreadsheets where some calculations can be automated but are prone to user error through spreadsheet interference 
 
-The app goes further by pulling drug interactions from the National Institutes of Health drug interactions API to warn the anesthetist of possible drug interactions. Includes all drugs administered within 12 hours of the anesthetic event and are present in the NIH Database.
-
 ## Features
 
 - Allows custom protocols for cats and dogs by entering each required drug and the required dose individually. 
  - Auto populates protocols for healthy cats and dogs with the click of a button.
- - Drug Interactions check from the National Institutes Of Health drug interactions API.
  - Calculates drug dosages for anesthesia, Fentanyl (pain) continuous rate infusion, fluid rates, and emergency drugs.
 
 ## Setup and Dependencies
